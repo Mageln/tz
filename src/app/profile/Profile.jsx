@@ -12,24 +12,25 @@ import defaultAvatar from "../../app/assets/img/avatar-svgrepo-com.svg"
 
 const Profile = () => {
   const dispatch = useDispatch()
-  const user = useSelector((state) => {
-    const storedUser = sessionStorage.getItem('user');
-    return storedUser ? JSON.parse(storedUser) : state.user;
-  });
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = sessionStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    }
+  }, []);
 
   const [avatar, setAvatar] = useState(null);
 
   useEffect(() => {
-    const storedUser = sessionStorage.getItem('user');
-    if (storedUser) {
-      dispatch({ type: "UPDATE_USER", user: JSON.parse(storedUser) });
-    }
-  }, []);
-
-  useEffect(() => {
-    const storedAvatar = sessionStorage.getItem('avatar');
-    if (storedAvatar) {
-      setAvatar(storedAvatar);
+    if (typeof window !== 'undefined') {
+      const storedAvatar = sessionStorage.getItem('avatar');
+      if (storedAvatar) {
+        setAvatar(storedAvatar);
+      }
     }
   }, []);
 
@@ -60,6 +61,7 @@ const Profile = () => {
   const handleEditRecord = useCallback((record) => {
     setEditingRecord(record);
   },[]);
+
   const handleSaveChanges = useCallback((record) => {
     editRecord(record);
     setEditingRecord(null);
@@ -71,13 +73,14 @@ const Profile = () => {
 
   const handleDeleat = useCallback((record) => {
     dispatch({ type: "REMOVE_RECORD", id: record.id })
-  },[dispatch])
+  },[dispatch]);
 
   const handleAddDescription = useCallback((record) => {
     editRecord({ ...record, description: description });
     setDescription('');
     setOpenRecords((prevOpenRecords) => ({ ...prevOpenRecords, [record.id]: true }));
   },[]);
+
   const handleAvatarUpload = useCallback((event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -88,15 +91,15 @@ const Profile = () => {
     };
     reader.readAsDataURL(file);
   }, [dispatch]);
-  
+
   return (
     <div className="container mx-auto p-4 pt-6 md:p-6 lg:p-12">
       <div className="bg-white shadow-md rounded p-4">
         <h1 className="text-3xl font-bold mb-4">
           Профиль
         </h1>
-        <p className="text-lg mb-2"> <b> Пользователь:</b> <span className="cursor-default hover:text-blue-600 transition duration-300 ease-in-out">{user.username}  </span> </p>
-        <p className="text-lg mb-4"> <b>Почта: </b>  <span className="cursor-default hover:text-blue-600 transition duration-300 ease-in-out"> {user.email}</span> </p>
+        <p className="text-lg mb-2"> <b> Пользователь:</b> <span className="cursor-default hover:text-blue-600 transition duration-300 ease-in-out">{user && user.username}  </span> </p>
+        <p className="text-lg mb-4"> <b>Почта: </b>  <span className="cursor-default hover:text-blue-600 transition duration-300 ease-in-out"> {user && user.email}</span> </p>
         <div style={{position:"relative",left: "381px",  top: "-132px"}}>
           <label >
         <Image src={avatar ? avatar : defaultAvatar} alt="avatar" className="w-20 h-20 rounded-full" width={200} height={200} objectFit="cover" />
