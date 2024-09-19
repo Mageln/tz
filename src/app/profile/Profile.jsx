@@ -2,7 +2,7 @@
 
 import { AddNote } from '../../components/AddNote';
 import RecordEditor from '../../components/RecordEditor';
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid';
 import Image from 'next/image';
@@ -20,6 +20,13 @@ const Profile = () => {
   const [avatar, setAvatar] = useState(null);
 
   useEffect(() => {
+    const storedUser = sessionStorage.getItem('user');
+    if (storedUser) {
+      dispatch({ type: "UPDATE_USER", user: JSON.parse(storedUser) });
+    }
+  }, []);
+
+  useEffect(() => {
     const storedAvatar = sessionStorage.getItem('avatar');
     if (storedAvatar) {
       setAvatar(storedAvatar);
@@ -34,54 +41,54 @@ const Profile = () => {
 
   const [description, setDescription] = useState('');
 
-  const handleToggleDescription = (record) => {
+  const handleToggleDescription = useCallback((record) => {
     setOpenRecords((prevOpenRecords) => ({
       ...prevOpenRecords,
       [record.id]: !prevOpenRecords[record.id]
     }))
-  }
+  },[])
 
-  const addRecord = (record) => {
+  const addRecord = useCallback((record) => {
     dispatch({ type: "ADD_RECORD", record: { ...record, id: uuidv4() } });
     dispatch({ type: "UPDATE_RECORDS", records: [...records, { ...record, id: uuidv4() }] });
-  };
+  },[dispatch]);
 
-  const editRecord = (record) => {
+  const editRecord = useCallback((record) => {
     dispatch({ type: "EDIT_RECORD", record });
-  }
+  },[])
 
-  const handleEditRecord = (record) => {
+  const handleEditRecord = useCallback((record) => {
     setEditingRecord(record);
-  };
-  const handleSaveChanges = (record) => {
+  },[]);
+  const handleSaveChanges = useCallback((record) => {
     editRecord(record);
     setEditingRecord(null);
-  };
+  },[]);
 
-  const handleCancelEdit = () => {
+  const handleCancelEdit = useCallback(() => {
     setEditingRecord(null);
-  };
+  },[]);
 
-  const handleDeleat = (record) => {
+  const handleDeleat = useCallback((record) => {
     dispatch({ type: "REMOVE_RECORD", id: record.id })
-  }
+  },[dispatch])
 
-  const handleAddDescription = (record) => {
+  const handleAddDescription = useCallback((record) => {
     editRecord({ ...record, description: description });
     setDescription('');
     setOpenRecords((prevOpenRecords) => ({ ...prevOpenRecords, [record.id]: true }));
-  };
-  const handleAvatarUpload = (event) => {
+  },[]);
+  const handleAvatarUpload = useCallback((event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
     reader.onloadend = () => {
       const avatar = reader.result;
-      sessionStorage.setItem('avatar', avatar);
-      setAvatar(avatar); // обновляем состояние avatar
+      setAvatar(avatar);
       dispatch({ type: "UPDATE_USER_AVATAR", avatar });
     };
     reader.readAsDataURL(file);
-  };
+  }, [dispatch]);
+  
   return (
     <div className="container mx-auto p-4 pt-6 md:p-6 lg:p-12">
       <div className="bg-white shadow-md rounded p-4">

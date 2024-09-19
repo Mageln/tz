@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 
 export const AddNote = ({addRecord}) => {
 
@@ -6,7 +6,7 @@ export const AddNote = ({addRecord}) => {
     const [description, setDescription] = useState('');
     const [error, setError] = useState(null);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = useCallback((e) => {
         e.preventDefault();
         if(title.trim() === ""){
             setError("Пожалуйста, заполните заголовок")
@@ -17,14 +17,14 @@ export const AddNote = ({addRecord}) => {
             setDescription('');
             setError(null)
         }
-      };
+      },[]);
 
-      const handleTitleChange = (e) => {
+      const handleTitleChange = useCallback((e) => {
         setTitle(e.target.value);
         if(error){
             setError(null)
         }
-      }
+      },[])
     
   return (
     <form className='flex'>
