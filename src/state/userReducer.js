@@ -13,7 +13,7 @@ const initialState = {
 
 
  const userReducer = (state=initialState,action) => {
-    console.log('User reducer:', state, action);
+
     switch(action.type){
         
         case "REGISTER_USER":

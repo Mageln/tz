@@ -2,7 +2,7 @@
 
 import { AddNote } from '../../components/AddNote';
 import RecordEditor from '../../components/RecordEditor';
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid';
 import Image from 'next/image';
@@ -16,6 +16,8 @@ const Profile = () => {
     const storedUser = sessionStorage.getItem('user');
     return storedUser ? JSON.parse(storedUser) : state.user;
   });
+
+
   const records = useSelector((state) => state.records);
 
   const [editingRecord, setEditingRecord] = useState(null);

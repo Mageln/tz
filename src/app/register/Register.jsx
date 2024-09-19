@@ -26,7 +26,6 @@ const Register = () => {
 
     const onSubmit = async (data) => {
 
-        console.log(data)
         dispatch({ type: "REGISTER_USER", username: data.username, email: data.email });
         sessionStorage.setItem("user", JSON.stringify(data))
 
