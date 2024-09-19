@@ -74,7 +74,7 @@ const Profile = () => {
       <AddNote addRecord={addRecord} />
       <ul className="list-none mb-4">
         {records.map((record) => (
-          <div key={record.id} className="mt-20px bg-white shadow-md rounded px-4 py-2 w-300px h-200px">
+          <div key={record.id} className="mt-5 bg-white shadow-md rounded px-4 py-2 w-300px h-200px">
             {editingRecord && editingRecord.id === record.id ? (
               <RecordEditor
                 record={record}
@@ -82,7 +82,7 @@ const Profile = () => {
                 onCancel={handleCancelEdit}
               />
             ) : (
-              <div className="  items-center">
+              <div className=" mt- items-center">
                 <span className="cursor-pointer flex justify-between items-center mb-2" onClick={() => handleToggleDescription(record)}>
                   <h3 className='text-lg font-bold'>
                     {record.title}
@@ -104,12 +104,12 @@ const Profile = () => {
                       >
                         Сохранить описание
                       </button>
-                      {record.description && (
-                        <div className="text-gray-600">{record.description}</div>
-                      )}
+                     
+                     
                     </div>
                   )
                 }
+                <div className="text-gray-600">{record.description}</div>
                 <div className="flex items-center -top-70px left-55px relative">
                   <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => handleDeleat(record)} ><FaRegTrashAlt /></button>
                   <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2" onClick={() => handleEditRecord(record)}>
