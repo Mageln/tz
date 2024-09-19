@@ -5,16 +5,18 @@ import RecordEditor from '../../components/RecordEditor';
 import { useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid';
-
-
+import Image from 'next/image';
 import { FaRegTrashAlt } from "react-icons/fa";
 import { MdOutlineEdit } from "react-icons/md";
+import avatar from "../../app/assets/img/avatar-svgrepo-com.svg" 
 
 const Profile = () => {
   const dispatch = useDispatch()
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => {
+    const storedUser = sessionStorage.getItem('user');
+    return storedUser ? JSON.parse(storedUser) : state.user;
+  });
   const records = useSelector((state) => state.records);
-
 
   const [editingRecord, setEditingRecord] = useState(null);
 
@@ -30,7 +32,6 @@ const Profile = () => {
   }
 
   const addRecord = (record) => {
-
     dispatch({ type: "ADD_RECORD", record: { ...record, id: uuidv4() } });
     dispatch({ type: "UPDATE_RECORDS", records: [...records, { ...record, id: uuidv4() }] });
   };
@@ -61,15 +62,29 @@ const Profile = () => {
     setOpenRecords((prevOpenRecords) => ({ ...prevOpenRecords, [record.id]: true }));
   };
 
+  const handleAvatarUpload = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const avatar = reader.result;
+      sessionStorage.setItem('avatar', avatar); 
+      dispatch({ type: "UPDATE_USER_AVATAR", avatar });
+    };
+    reader.readAsDataURL(file);
+  };
+
   return (
     <div className="container mx-auto p-4 pt-6 md:p-6 lg:p-12">
       <div className="bg-white shadow-md rounded p-4">
         <h1 className="text-3xl font-bold mb-4">
           Профиль
         </h1>
-        <p className="text-lg mb-2"> <b> Пользователь:</b> {user.username}</p>
-        <p className="text-lg mb-4"> <b>Почта: </b>  {user.email}</p>
-
+        <p className="text-lg mb-2"> <b> Пользователь:</b> <span className="cursor-default hover:text-blue-600 transition duration-300 ease-in-out">{user.username}  </span> </p>
+        <p className="text-lg mb-4"> <b>Почта: </b>  <span className="cursor-default hover:text-blue-600 transition duration-300 ease-in-out"> {user.email}</span> </p>
+        <div style={{position:"relative",left: "381px",  top: "-132px"}}>
+        <Image src={sessionStorage.getItem('avatar') ? sessionStorage.getItem('avatar') : avatar} alt="avatar" className="w-20 h-20 rounded-full"  />
+          <input type="file" onChange={handleAvatarUpload} />
+        </div>
         <h2 className="text-2xl font-bold mb-4">Заметки</h2>
         <AddNote addRecord={addRecord} />
         <ul className="list-none mb-4">
@@ -104,8 +119,6 @@ const Profile = () => {
                         >
                           Сохранить описание
                         </button>
-                       
-                       
                       </div>
                     )
                   }
@@ -125,6 +138,5 @@ const Profile = () => {
     </div>
   )
 }
-
 
 export default Profile

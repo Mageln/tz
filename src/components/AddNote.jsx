@@ -30,7 +30,7 @@ export const AddNote = ({addRecord}) => {
     <form className='flex'>
     <label>
 
-    <input className='w-300px  bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' type="text" value={title} onChange={handleTitleChange} />
+    <input placeholder='Введите название' className='w-300px  bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' type="text" value={title} onChange={handleTitleChange} />
     </label>
     {error && (
         <div style={{color:"red", position:"absolute", top:"156px"}}>{error}</div>

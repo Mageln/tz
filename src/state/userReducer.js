@@ -3,8 +3,11 @@
 import { useEffect } from "react";
 
 const initialState = {
-    username: "",
-    email:  "",
+    user:{
+        username: "",
+        email:  "",
+        avatars: "",
+    },
     records: [],
 };
 
@@ -18,6 +21,9 @@ const initialState = {
             sessionStorage.getItem("username", action.username)
             sessionStorage.getItem("email", action.email)
         return newState;
+
+        case "UPDATE_USER_AVATAR":
+            return { ...state, user: { ...state.user, avatar: action.avatar } };
         default:
             return state
     }
