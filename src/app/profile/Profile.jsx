@@ -84,8 +84,10 @@ const Profile = () => {
         <p className="text-lg mb-2"> <b> Пользователь:</b> <span className="cursor-default hover:text-blue-600 transition duration-300 ease-in-out">{user.username}  </span> </p>
         <p className="text-lg mb-4"> <b>Почта: </b>  <span className="cursor-default hover:text-blue-600 transition duration-300 ease-in-out"> {user.email}</span> </p>
         <div style={{position:"relative",left: "381px",  top: "-132px"}}>
-        <Image src={sessionStorage.getItem('avatar') ? sessionStorage.getItem('avatar') : avatar} alt="avatar" className="w-20 h-20 rounded-full"  />
+          <label >
+        <Image src={sessionStorage.getItem('avatar') ? sessionStorage.getItem('avatar') : avatar} alt="avatar" className="w-20 h-20 rounded-full" width={200} height={200} objectFit="cover" />
           <input type="file" onChange={handleAvatarUpload} />
+          </label>
         </div>
         <h2 className="text-2xl font-bold mb-4">Заметки</h2>
         <AddNote addRecord={addRecord} />
