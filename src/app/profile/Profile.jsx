@@ -1,7 +1,7 @@
 "use client"
 
-import { AddNote } from '@/components/addNote';
-import RecordEditor from '@/components/RecordEditor';
+import { AddNote } from '../../components/AddNote';
+import RecordEditor from '../../components/RecordEditor';
 import { useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid';
