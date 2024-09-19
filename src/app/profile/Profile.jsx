@@ -42,25 +42,25 @@ const Profile = () => {
 
   const [description, setDescription] = useState('');
 
-  const handleToggleDescription = useCallback((record) => {
+  const handleToggleDescription = (record) => {
     setOpenRecords((prevOpenRecords) => ({
       ...prevOpenRecords,
       [record.id]: !prevOpenRecords[record.id]
     }))
-  },[])
+  }
 
   const addRecord = useCallback((record) => {
     dispatch({ type: "ADD_RECORD", record: { ...record, id: uuidv4() } });
     dispatch({ type: "UPDATE_RECORDS", records: [...records, { ...record, id: uuidv4() }] });
   },[dispatch]);
 
-  const editRecord = useCallback((record) => {
+  const editRecord = (record) => {
     dispatch({ type: "EDIT_RECORD", record });
-  },[])
+  }
 
-  const handleEditRecord = useCallback((record) => {
+  const handleEditRecord = (record) => {
     setEditingRecord(record);
-  },[]);
+  };
 
   const handleSaveChanges = useCallback((record) => {
     editRecord(record);
@@ -71,15 +71,15 @@ const Profile = () => {
     setEditingRecord(null);
   },[]);
 
-  const handleDeleat = useCallback((record) => {
+  const handleDeleat = (record) => {
     dispatch({ type: "REMOVE_RECORD", id: record.id })
-  },[dispatch]);
+  };
 
-  const handleAddDescription = useCallback((record) => {
+  const handleAddDescription = (record) => {
     editRecord({ ...record, description: description });
     setDescription('');
     setOpenRecords((prevOpenRecords) => ({ ...prevOpenRecords, [record.id]: true }));
-  },[]);
+  };
 
   const handleAvatarUpload = useCallback((event) => {
     const file = event.target.files[0];
