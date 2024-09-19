@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Image from 'next/image';
 import { FaRegTrashAlt } from "react-icons/fa";
 import { MdOutlineEdit } from "react-icons/md";
-import avatar from "../../app/assets/img/avatar-svgrepo-com.svg" 
+import defaultAvatar from "../../app/assets/img/avatar-svgrepo-com.svg" 
 
 const Profile = () => {
   const dispatch = useDispatch()
@@ -17,6 +17,14 @@ const Profile = () => {
     return storedUser ? JSON.parse(storedUser) : state.user;
   });
 
+  const [avatar, setAvatar] = useState(null);
+
+  useEffect(() => {
+    const storedAvatar = sessionStorage.getItem('avatar');
+    if (storedAvatar) {
+      setAvatar(storedAvatar);
+    }
+  }, []);
 
   const records = useSelector((state) => state.records);
 
@@ -63,18 +71,17 @@ const Profile = () => {
     setDescription('');
     setOpenRecords((prevOpenRecords) => ({ ...prevOpenRecords, [record.id]: true }));
   };
-
   const handleAvatarUpload = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
     reader.onloadend = () => {
       const avatar = reader.result;
-      sessionStorage.setItem('avatar', avatar); 
+      sessionStorage.setItem('avatar', avatar);
+      setAvatar(avatar); // обновляем состояние avatar
       dispatch({ type: "UPDATE_USER_AVATAR", avatar });
     };
     reader.readAsDataURL(file);
   };
-
   return (
     <div className="container mx-auto p-4 pt-6 md:p-6 lg:p-12">
       <div className="bg-white shadow-md rounded p-4">
@@ -85,7 +92,7 @@ const Profile = () => {
         <p className="text-lg mb-4"> <b>Почта: </b>  <span className="cursor-default hover:text-blue-600 transition duration-300 ease-in-out"> {user.email}</span> </p>
         <div style={{position:"relative",left: "381px",  top: "-132px"}}>
           <label >
-        <Image src={sessionStorage.getItem('avatar') ? sessionStorage.getItem('avatar') : avatar} alt="avatar" className="w-20 h-20 rounded-full" width={200} height={200} objectFit="cover" />
+        <Image src={avatar ? avatar : defaultAvatar} alt="avatar" className="w-20 h-20 rounded-full" width={200} height={200} objectFit="cover" />
           <input type="file" onChange={handleAvatarUpload} />
           </label>
         </div>
